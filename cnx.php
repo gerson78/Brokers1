@@ -2,9 +2,9 @@
 
 
 $db_host="localhost"; 
-$db_usuario="web_brokers"; 
+$db_usuario="brokerscapitalcr_WEB"; 
 $db_password="UAeYNz6XfKEKLGWJ"; 
-$db_nombre="db_brokers"; 
+$db_nombre="brokerscapitalcr_DB"; 
 /*
 $db_host="167.114.208.144";
 $db_usuario="waveslab_web";

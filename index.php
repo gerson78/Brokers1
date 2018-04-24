@@ -46,28 +46,23 @@
 		$time6 = time();
 	   //print substr($time6, -1);
 	   $idCapCha = substr($time6, -1);
-		
-		//VALIDACION PARA OBTENER EL CODIGO DEL VENDEDOR (CEDULA JURIDICA)
-	 	$queryCAPCHA = "SELECT `cod_capcha`, `des_ruta_imagen`, `des_text_capcha`, `fec_modificacion`, `usr_modificacion` FROM `sis_datos_capcha` WHERE cod_capcha = '$idCapCha'";
-		$resultCAPCHA  = mysqli_query($con , $queryCAPCHA) or die("Error en: $queryCAPCHA " . mysql_error());
-	
-		if($resultCAPCHA === FALSE) {
-			die(mysql_error()); // TODO: better error handling
-		}
-	
-		$rowCAPCHA = mysqli_fetch_array($resultCAPCHA, MYSQL_ASSOC);
+
+	   if ($resultado = $con->query("SELECT `cod_capcha`, `des_ruta_imagen`, `des_text_capcha`, `fec_modificacion`, `usr_modificacion` FROM `sis_datos_capcha` WHERE cod_capcha = '$idCapCha'"))
+	    {
+		$rowCAPCHA = $resultado->fetch_array(MYSQLI_ASSOC);
 		$ruta_imagen = $rowCAPCHA["des_ruta_imagen"];
 		$text_capcha = $rowCAPCHA["des_text_capcha"];
-		 
-		// echo $ruta_imagen;
-		// echo $text_capcha;
+		$resultado->close();
+	}
+		
 		?>
 		
 	<!-- Menu -->
 	<nav class="menu" id="theMenu">
-	<?php echo '_'; ?>
+	
 							
 		<div class="menu-wrap">
+		
 							
 			<h1 class="logo"><a href="index.html#home">BROKERS CR</a></h1>
 			<i class="fa fa-times menu-close"></i>
@@ -75,7 +70,8 @@
 			<a href="#about" class="smoothScroll">Acerca de</a>
 			<a href="#portfolio" class="smoothScroll">Portafolio</a>
 			<a href="#services" class="smoothScroll">Proyectos</a>
-			<a href="#contact" class="smoothScroll">Cont&aacutectenos</a>
+			<a href="#contact" class="smoothScroll">Cont&aacutectenos </a>
+			<a href="login.php" class="smoothScroll">Ingresar </a>
 			<a href="#"><i class="fa fa-facebook"></i></a>
 		
 		
@@ -375,6 +371,14 @@
 					      <p>Asesor Patrimonial Senior de Brokers Capital, Presidente de Hotel Los Ángeles. Ex: Lehman Brothers, Citigroup, Credit Suisse, BN Valores, Vice-Presidente BLADEX. Instructor de FUNDEVAL.</p>
 					      <p><img class="img-circle" src="assets/img/CESAR.png" width="80"></p>
 					    </div>
+						
+						  <div class="item mb centered">
+					      <h3>FRANCISCO ULATE AZOFEIFA (Asociado)</h3>
+					      <p> Comunicador </p>
+					      <p> Encargado de Comunicación de Masterzon.</p>
+					      <p><img class="img-circle" src="assets/img/FRANKO.jpeg" width="80"></p>
+					    </div>
+						
 					  </div>
 					  <!-- Indicators -->
 					  <ol class="carousel-indicators">
