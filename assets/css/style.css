@@ -247,6 +247,26 @@ h1, h2, h3, h4, h5, h6 {
 /* ==========================================================================
    Wrap Sections
    ========================================================================== */
+#panel {
+	background: url(../img/back_blanco.jpg) no-repeat center top;
+	margin-top: 0px;
+	padding-top:120px;
+	text-align:center;
+	background-attachment: relative;
+	background-position: center center;
+	min-height: 700px;
+	width: 100%;
+	
+    -webkit-background-size: 100%;
+    -moz-background-size: 100%;
+    -o-background-size: 100%;
+    background-size: 100%;
+
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
 
 #headerwrap {
 	background: url(../img/back.jpg) no-repeat center top;
