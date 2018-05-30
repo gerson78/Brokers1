@@ -50,53 +50,62 @@ include('cnx.php');
 
 			 
 		//VALIDACION PARA OBTENER EL CODIGO DEL VENDEDOR (CEDULA JURIDICA)
-		if ($resultado = $con->query("SELECT val_parametro FROM sis_parametros WHERE cod_parametro = 'SIS015'")) {
-			$myrow = $resultado->fetch_array(MYSQLI_ASSOC);
-			$valor = $myrow["val_parametro"];
-			$resultado->close();
-		}
-		
-		//Se definen los valores de la session de usuario.
+		$query = "SELECT val_parametro FROM sis_parametros WHERE cod_parametro = 'SIS015'";
+		$resultParametro = mysqli_query($con , $query) or die("Error en: $query " . mysql_error());	
+	
+		if($resultParametro === FALSE) { 
+    			die(mysql_error()); // TODO: better error handling
+			}
+
+          $rowParametro = mysqli_fetch_array($resultParametro, MYSQL_ASSOC);
+          $valor = $rowParametro["val_parametro"];
+		  
+		  
+		  		//Se definen los valores de la session de usuario.
 				$_SESSION['start'] = time(); // Taking now logged in time.
 				//echo '$_SESSION[start]'.$_SESSION['start'].'<p>';
 		// Ending a session in 30 minutes from the starting time.
 				$_SESSION['expire'] = $_SESSION['start'] + ($valor * 60);
 				//echo  '$_SESSION[expire]'.$_SESSION['expire'].'<p>';
+				$_SESSION['usr'] = $_POST["usuario"];
 		  
 	if(trim($_POST["usuario"]) != "" && trim($_POST["password"]) != "")
 		{
 		$usuario = strtolower(htmlentities($_POST["usuario"],ENT_QUOTES));
-
+		
 		$password = $_POST["password"];
 	
-		
-		if ($resultado = $con->query("SELECT cod_usuario, cod_clave, des_nombre, des_apellido1, num_identificacion, cod_perfil FROM sis_usuarios WHERE ind_estado = 'A' and cod_usuario = '$usuario' LIMIT 1")) {
-			
-			$passwordDB="vacio";
-		while($row = $resultado->fetch_array(MYSQLI_ASSOC))
-			{
-				$_SESSION["k_username"] = $row["cod_usuario"];
-				$nombre = $row["des_nombre"];
-				$apellido = $row["des_apellido1"];
-				$id_usuario = $row["num_identificacion"];
-				$perfil = $row["cod_perfil"];
-				
-				if ($resultado){
-				$passwordDB = $row['cod_clave'];
-				}else{
-					$passwordDB="";
-				}
-			}
-			$resultado->close();
-		}else{
-			exit();
-			echo $con->error;
-		}
+		$query = "SELECT cod_usuario, cod_clave, des_nombre, des_apellido1, num_identificacion, cod_perfil FROM sis_usuarios WHERE ind_estado = 'A' and cod_usuario = '$usuario' LIMIT 1";
 
- 
+		/* comprobar la conexiï¿½n */
+		if (mysqli_connect_errno()) {
+		    printf("FallO la conexiOn: %s\n", mysqli_connect_error());
+		    exit();
+			}else{
+			$result = mysqli_query($con,$query) or die("Error en: $query " . mysql_error());
+			}
 			
+
+			if($result === FALSE) { 
+    			die(mysql_error()); // TODO: better error handling
+			}
+			$passwordDB="vacio";
+		while($row = mysqli_fetch_array($result, MYSQL_ASSOC))
+			{
+			$_SESSION["k_username"] = $row["cod_usuario"];
+			$nombre = $row["des_nombre"];
+			$apellido = $row["des_apellido1"];
+			$id_usuario = $row["num_identificacion"];
+			$perfil = $row["cod_perfil"];
+			
+			if ($result){
+			$passwordDB = $row['cod_clave'];
+			}else{
+				$passwordDB="";
+			}
+			}
 		
-		if ($resultado){
+		if ($result){
 
 			if (trim($passwordDB) == trim($password)){
 				
@@ -125,7 +134,7 @@ include('cnx.php');
 				
 				//echo "Sistema operativo: ".$info["os"];
 				//echo "Navegador: ".$info["browser"];
-				//echo "Versiï¿½n: ".$info["version"];
+				//echo "Versión: ".$info["version"];
 				//echo $_SERVER['HTTP_USER_AGENT'];
 				
 				$so = $info["os"];
@@ -150,15 +159,20 @@ include('cnx.php');
 				
 				//Validacion para saber si usaurio es ejecutivo activo.
 				//VALIDACION PARA OBTENER EL CODIGO DEL VENDEDOR (CEDULA JURIDICA)
-				if ($resultado = $con->query("SELECT `num_cedula`, `nom_ejecutivo`, `des_nick_name`, `cod_estado`, `des_email_1`, `des_email_2`, `des_telefono`
-				FROM `sis_ejecutivos` WHERE num_cedula = '$id_usuario' AND cod_estado = 'A'")) {
-					$rowValidaEjec = $resultado->fetch_array(MYSQLI_ASSOC);
-					$num_cedula_ejec = $rowValidaEjec["num_cedula"];
-					$nick_ejecutivo = $rowValidaEjec["des_nick_name"];
-					$resultado->close();
-				}
+				$queryValidaEjec = "SELECT `num_cedula`, `nom_ejecutivo`, `des_nick_name`, `cod_estado`, `des_email_1`, `des_email_2`, `des_telefono`
+										FROM `sis_ejecutivos` 
+											WHERE num_cedula = '$id_usuario' 
+											AND cod_estado = 'A'";
+											
+				$resultValidaEjec = mysqli_query($con , $queryValidaEjec) or die("Error en: $queryValidaEjec " . mysql_error());	
+	
+				if($resultValidaEjec === FALSE) { 
+    			die(mysql_error()); // TODO: better error handling
+				}		
 
-				
+				$rowValidaEjec = mysqli_fetch_array($resultValidaEjec, MYSQL_ASSOC);
+				$num_cedula_ejec = $rowValidaEjec["num_cedula"];
+				$nick_ejecutivo = $rowValidaEjec["des_nick_name"];
 		  
 				?>
 	 <nav class="menu" id="theMenu">
